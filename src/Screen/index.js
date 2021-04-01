@@ -1,0 +1,6 @@
+export {default as Homepage} from './Homepage/Homepage'
+export {default as Login} from './Login/Login'
+export {default as Profile} from './Profile/Profile'
+export {default as OtpVerification} from './OtpVerification/OtpVerification'
+export {default as UserSearch} from './UserSearch/UserSearch'
+export {default as UserNearMe} from './UserNearMe/UserNearMe'

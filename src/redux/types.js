@@ -1,0 +1,6 @@
+export default {
+    ADD:'ADD',
+    CASHOUT:"CASHOUT",
+    ONOTPVERIFY:'ONOTPVERIFY',
+    ONLOGOUT:"ONLOGOUT"
+}
