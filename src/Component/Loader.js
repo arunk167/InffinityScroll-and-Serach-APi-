@@ -9,7 +9,7 @@ export default function Loader(props) {
         return(
          
 
-                <View>
+                <View >
                   <ActivityIndicator size="large" color={colors.themeColor}/> 
                 </View>
         
@@ -32,7 +32,7 @@ export default function Loader(props) {
 //         right:0,
 //         justifyContent:'center',
 //         alignItems:'center',
-//         backgroundColor:"rgba(255,255,255,0.7)"
+//         backgroundColor:"rgba(255,255,255,0.5)"
           
 //     }
 // })

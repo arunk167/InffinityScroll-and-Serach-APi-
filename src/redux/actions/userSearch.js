@@ -11,12 +11,12 @@ export function displayList (data={}){
     })
  }
  
- export function userNearMe(data){
-     return new Promise((resolve,reject)=>{
-         apiGet(USER_NEAR_ME+`${data}`).then(res=>{
-             resolve(res);
-         }).catch(error=>{
-             reject(error)
-         })
-     })
+ export const userNearMe=(data)=>{
+    
+        return apiGet(USER_NEAR_ME+`?name=${data}`)
  }
+
+ export const nearByUsers=(long,lat)=>{
+    
+    return apiGet(USER_NEAR_ME+`?coordinates=["${long}",${lat}]`)
+}

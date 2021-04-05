@@ -3,15 +3,16 @@ import {createStackNavigator} from  '@react-navigation/stack'
 import navigationStrings from '../constants/navigationStrings.js';
 import {Homepage} from '../Screen';
 import TabRoutes from './TabRoutes';
+import DrawerRoutes from './DrawerRoutes.js';
+
 
 
 
 const Stack=createStackNavigator();
-function AuthSatck(){
+function MainStack(){
     return (
         <React.Fragment>
-            
-            <Stack.Screen name={navigationStrings.TAB_ROUTES} component={TabRoutes} 
+             <Stack.Screen name={navigationStrings.DRAWER_ROUTES} component={DrawerRoutes} 
             options={{
                 headerShown:false
             }}/>
@@ -19,4 +20,4 @@ function AuthSatck(){
         </React.Fragment>
     )
 }
-export default AuthSatck ;
+export default MainStack ;

@@ -39,10 +39,6 @@ const styles = StyleSheet.create({
     width:100,
        resizeMode:'contain',
        borderRadius:100,
-      
-      
-    
-
   },
   imageView:{
           justifyContent:'center',
@@ -69,10 +65,11 @@ const styles = StyleSheet.create({
   parent: {
     marginHorizontal: 10,
     marginVertical: 5,
-    borderWidth:0.5,
+    borderWidth:0.9,
     borderColor:colors.lightGreyBg,
     width:"45%",
-    borderRadius:10
+    borderRadius:10,
+    backgroundColor:colors.azure
   },
   city:{
     ...commonStyles.mediumFont14,

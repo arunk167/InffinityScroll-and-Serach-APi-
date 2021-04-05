@@ -8,6 +8,7 @@ import store from './src/redux/store';
 import types from './src/redux/types';
 import { getUserData } from './src/utils/utils';
 import SplashScreen from 'react-native-splash-screen'
+import requestUserPermission from './src/utils/notificationServices';
 const {dispatch}=store
 
 export default class App extends Component {
@@ -24,7 +25,8 @@ componentDidMount(){
     }) 
    }    
   })
- 
+ requestUserPermission();
+
   }
 
   render() {

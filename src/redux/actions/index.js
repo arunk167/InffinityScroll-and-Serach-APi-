@@ -5,5 +5,5 @@ import * as userSearch from './userSearch'
 export default{
     ...auth,
     ...home,
-    ...userSearch
+    ...userSearch 
 }

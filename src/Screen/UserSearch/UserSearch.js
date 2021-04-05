@@ -7,10 +7,7 @@ import ItemList from '../../Component/ItemList';
 import Loader from '../../Component/Loader';
 import WrapperContainer from '../../Component/WrapperContainer';
 import actions from '../../redux/actions';
-
-
-
-
+import colors from '../../styles/colors';
 const  page= 2;
 export default class Consult extends Component {
   constructor(props) {
@@ -104,8 +101,8 @@ export default class Consult extends Component {
 
     return (
      <WrapperContainer>
-        <View style={{flex: 1}}>
-        <Header headerText={"Users"} />
+        <View>
+        <Header headerText={"Users"}  isImage={true}/>
 
         <FlatList
           refreshControl={

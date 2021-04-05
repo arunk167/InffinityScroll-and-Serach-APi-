@@ -4,10 +4,10 @@ export default {
     TOTAL_CASH_IN:"Total Cash In",
     TOTAL_CASH_OUT:"Total Cash Out",
     TOTAL_BALANCE:"Total Balance",
-    
+    FIND_NEAR:"Users Near By You",
     SIGN_IN:"Sign in",
     OR_LOGIN_WITH:"Or login with",
-   
+    SEARCH_HERE:'Search User here',
     CREATE_AN_ACCOUNT:"CREATE NEW ACCOUNT",
     GUEST_LOGIN:"GUEST LOGIN",
     OR_SIGNUP_WITH:"Or signup with",

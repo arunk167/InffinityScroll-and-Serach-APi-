@@ -62,7 +62,7 @@ export default class OtpVerification extends Component {
     this.setState({
       isLoading: true,
     });
-
+ 
     actions
       .otpVerify({
         userId,

@@ -4,7 +4,7 @@ import React from 'react';
 
 import imagePath from '../constants/imagePath';
 import navigationStrings from '../constants/navigationStrings';
-import {Homepage, Profile, UserSearch,UserNearMe} from '../Screen';
+import {Homepage, Profile, UserSearch,UserNearMe, SearchByTextInput, Charts} from '../Screen';
 import colors from '../styles/colors';
 
 
@@ -25,7 +25,7 @@ function TabRoutes({navigation}) {
           ),
 
           tabBarIcon: ({focused, color, size}) => (
-            <Image  source={imagePath.search}
+            <Image  source={imagePath.list}
             style={{
                 width: size,
                 height: size,
@@ -42,7 +42,30 @@ function TabRoutes({navigation}) {
                 color: focused ? colors.themeColor : 'black',
                 fontSize: 12,
               }}>
-              Search
+              
+              Near Me
+            </Text>
+          ),
+
+          tabBarIcon: ({focused, color, size}) => (
+            <Image  source={imagePath.nearBy}
+            style={{
+                width: size,
+                height: size,
+                tintColor: focused ? colors.themeColor : 'black',
+            }}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen name={navigationStrings.SEARCH_BY_TEXT_INPUT} component={SearchByTextInput}
+        options={{
+          tabBarLabel: ({focused, color, size}) => (
+            <Text style={{
+                color: focused ? colors.themeColor : 'black',
+                fontSize:12,
+              }}>
+             Search User
             </Text>
           ),
 
@@ -57,19 +80,19 @@ function TabRoutes({navigation}) {
           ),
         }}
       />
-      <Tab.Screen name={navigationStrings.HOMEPAGE} component={Homepage}
+      <Tab.Screen name={navigationStrings.CHARTS} component={Charts}
         options={{
           tabBarLabel: ({focused, color, size}) => (
             <Text style={{
                 color: focused ? colors.themeColor : 'black',
                 fontSize:12,
               }}>
-             Add
+              Chart
             </Text>
           ),
 
           tabBarIcon: ({focused, color, size}) => (
-            <Image  source={imagePath.plus}
+            <Image  source={imagePath.chart}
             style={{
                 width: size,
                 height: size,

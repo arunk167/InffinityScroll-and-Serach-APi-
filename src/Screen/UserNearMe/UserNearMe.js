@@ -1,31 +1,150 @@
-import React, { Component } from 'react'
-import { Text, TextInput, View } from 'react-native'
-import strings from '../../constants/lang'
+import React, {Component} from 'react';
+import {
+  Text,
+  TextInput,
+  View,
+  FlatList,
+  Image,
+  ActivityIndicator,
+} from 'react-native';
+
+import ItemList from '../../Component/ItemList';
+import strings from '../../constants/lang';
+import actions from '../../redux/actions';
+import styles from './styles';
+import imagePath from '../../constants/imagePath';
+import Header from '../../Component/Header';
+import Loader from '../../Component/Loader';
+import WrapperContainer from '../../Component/WrapperContainer';
+import { locationPermission } from '../../utils/permissions';
+import ButtonWithLoader from '../../Component/ButtonWithLoader';
+import fontFamily from '../../styles/fontFamily';
+import Geolocation from 'react-native-geolocation-service';
+import colors from '../../styles/colors';
 
 export default class UserNearMe extends Component {
-    state=[
-        searchInput=''
-    ]
-    _onChangeText=(key)=>{
-           return value=>{
-               this.setState({
-                   [key]:value
-                   
-               })
-           }
-        
-    }
-    render() {
-        
-        return (
-            <View>
-               <TextInput 
-               placeholder={strings.ENTER_YOUR_EMAIL}
-               onChangeText={this._onChangeText('searchInput')}
-               
-            />
-            </View>
-        )
-    }
-}
+  state = [(searchInput = ''), (data = []), (isLoading = false),nearUserMe=[],isSearching=true]
+  
+  apiCall = () => {
+    const {searchInput} = this.state;
+    this.setState({
+      isLoading: true,
+     
+    });
 
+    actions
+      .userNearMe(searchInput)
+      .then(res => {
+        searchItem = res.data;
+        this.setState({
+          data: searchItem,
+          isLoading: false,
+        });
+      })
+      .catch(error => {
+        console.log(error);
+        this.setState({
+          isLoading: false,
+          data: [],
+        });
+      });
+  };
+  _onChangeText = key => {
+    this.setState({
+      searchInput: key,
+    });
+    if (this.setTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
+    this.searchTimeout = setTimeout(() => {
+      this.apiCall();
+    }, 600);
+  };
+
+  findNearMe=()=>{
+    locationPermission().then(res=>{
+        Geolocation.getCurrentPosition(
+            (position) => {
+              console.log(position);
+              let {longitude,latitude}=position.coords;
+              this.setState({
+                  isLoading:true,
+              });
+              actions.nearByUsers(longitude,latitude).then(res=>{
+                  this.setState({
+                     nearUserMe:res.data,
+                      isLoading:false
+                  })
+              }).catch(error=>{
+                  this.setState({
+                      isLoading:false,
+                  })
+              })
+            },
+            (error) => {
+              // See error code charts below.
+              console.log(error.code, error.message);
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        ).catch(error=>{
+            console.log(error,"error message")
+        })
+    })
+       
+      
+  }
+  render() {
+    console.log(this.state.searchInput);
+    const {data, isLoading,nearUserMe,isSearching} = this.state;
+    return (
+      <WrapperContainer>
+        <View style={{flex: 1}}>
+          <Header headerText={'Search Users'} />
+          {/* <View style={styles.searchBarView}>
+            <Image
+              source={imagePath.search}
+              style={styles.searchIcon}
+              resizeMode="contain"
+            />
+            <TextInput
+              style={styles.searcTextInput}
+              placeholder={strings.SEARCH_HERE}
+              onChangeText={this._onChangeText}/>
+            
+               
+               
+        { isLoading?
+          
+           <ActivityIndicator size="small" color={colors.themeColor} style={styles.activity} />:<></>
+        }
+        
+                
+               
+            
+
+
+          </View> */}
+         
+          <FlatList
+            data={nearUserMe}
+            numColumns={2}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={item => item.id}
+            onEndReached={this._onEndReached}
+            ListFooterComponent={this._listfooterComponent}
+            ItemSeparatorComponent={this._itemSeparatorComponent}
+            renderItem={({item, index}) => {
+              return <ItemList data={item} btnText={'connect'} />;
+            }}
+          />
+          {/* <Loader isLoading={isLoading} /> */}
+         <View style={{marginHorizontal:10,marginVertical:10}}>
+         <ButtonWithLoader btnText={strings.FIND_NEAR} onPress={this.findNearMe} isLoading={isLoading}
+              btnTextStyle={styles.btn}
+            />
+         </View>
+        </View>
+      </WrapperContainer>
+    );
+  }
+}

@@ -21,17 +21,92 @@ import strings from '../../constants/lang';
 import Header from '../../Component/Header';
 import fontFamily from '../../styles/fontFamily';
 import styles from './styles';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+GoogleSignin.configure();
+import {
+  LoginButton,
+  AccessToken,
+  GraphRequest,
+  GraphRequestManager,
+  LoginManager,
+} from 'react-native-fbsdk';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 export default class Login extends Component {
   state = {
     userEmail: '',
     userPassword: '',
     isLoading: false,
-    phoneNumber:''
+    phoneNumber:'',
+    userInfo: {}
   };
+  loginWithFacebook = () => {
+    // Attempt a login using the Facebook login dialog asking for default permissions.
+    LoginManager.logInWithPermissions(['public_profile']).then(
+      login => {
+        if (login.isCancelled) {
+          console.log('Login cancelled');
+        } else {
+          AccessToken.getCurrentAccessToken().then(data => {
+            const accessToken = data.accessToken.toString();
+            this.getInfoFromToken(accessToken);
+          });
+        }
+      },
+      error => {
+        console.log('Login fail with error: ' + error);
+      },
+    );
+  };
+  // onLogoutFinished=() => this.setState({userInfo: {}})
+
+  getInfoFromToken = token => {
+    const PROFILE_REQUEST_PARAMS = {
+      fields: {
+        string: 'id, name,  first_name, last_name',
+      },
+    };
+    const profileRequest = new GraphRequest(
+      '/me',
+      {token, parameters: PROFILE_REQUEST_PARAMS},
+      (error, result) => {
+        if (error) {
+          console.log('login info has error: ' + error);
+        } else {
+          this.setState({userInfo: result});
+          console.log('result:', result);
+        }
+      },
+    );
+    new GraphRequestManager().addRequest(profileRequest).start();
+  };  
+  
   onmove = () => {
     const {navigation} = this.props;
     navigation.navigate(navigationStrings.SIGNUP);
+  };
+
+  signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      this.setState({ userInfo });
+      alert(JSON.stringify(userInfo))
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
   };
   isValidData = () => {
     const {
@@ -103,9 +178,10 @@ export default class Login extends Component {
   render() {
     const {isLoading,phoneNumber} = this.state;
     return (
-      <WrapperContainer>
+      <WrapperContainer bgColor={Colors.white}>
           <Header headerText={"Login"} />
-        <View style={{flex: 1, backgroundColor: colors.white}}
+        <View
+        //  style={{flex: 1, backgroundColor: colors.white}}
          pointerEvents={isLoading?'none':'auto'} >
           <View
             style={{
@@ -139,6 +215,7 @@ export default class Login extends Component {
                 buttonText={strings.FACEBOOK}
                 isImageVisiable={true}
                 btnTextColor={colors.blue}
+                onTouch={this.loginWithFacebook}
               />
             </View>
             <View
@@ -148,6 +225,7 @@ export default class Login extends Component {
                 buttonText={strings.GOOGLE}
                 isImageVisiable={true}
                 btnTextColor={colors.red}
+                onTouch={this.signIn}
               />
             </View>
           </View>
@@ -166,6 +244,29 @@ export default class Login extends Component {
               </Text>
             </TouchableOpacity>
           </View>
+          {/* <LoginButton
+          onLoginFinished={(error, result) => {
+            if (error) {
+              console.log('login has error:' + error); 
+              alert(error)
+            } else if (result.isCancelled) {
+                 console.log('login is cancelled.');
+              
+            } else {
+              AccessToken.getCurrentAccessToken().then(data => {
+                const accessToken = data.accessToken.toString();
+                this.getInfoFromToken(accessToken);
+              
+              });
+            }
+          }}
+          onLogoutFinished={() => this.setState({userInfo: {}})}
+        /> */}
+        {this.state.userInfo.name && (
+          <Text style={{fontSize: 16, marginVertical: 16}}>
+            Logged in As {this.state.userInfo.name}
+          </Text>
+        )}
         </View>
       </WrapperContainer>
     );

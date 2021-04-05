@@ -1,15 +1,24 @@
 import React from 'react'
-import { View, Text,StyleSheet ,Image} from 'react-native'
+import { View, Text,StyleSheet ,Image,TouchableOpacity} from 'react-native'
+
+import imagePath from '../constants/imagePath'
 import colors from '../styles/colors'
 import commonStyles from '../styles/commonStyles'
 import fontFamily from '../styles/fontFamily'
+import {useNavigation} from '@react-navigation/native'
+
 const Header=({
     headerText='KhataBook',
-    imageSource
+    isImage,
+   
 })=>{
+   const navigation =useNavigation();
     return(
         <View style={styles.parent}>
-            <Image source={imageSource} style={styles.image} />
+           {isImage && 
+            <TouchableOpacity onPress={()=>navigation.openDrawer()} >
+            <Image source={imagePath.menu} style={styles.image} />
+            </TouchableOpacity>}
             <Text style={styles.headerText}>
                 {headerText}
             </Text>
@@ -21,22 +30,23 @@ const styles=StyleSheet.create({
     headerText:{
         ...commonStyles.mediumFont20,
         color:colors.white,
-        marginHorizontal:15,
-        textAlign:'center',
+        marginHorizontal:5,
+       
         fontFamily:fontFamily.bold
       },
       parent:{
           height:35,
           backgroundColor:colors.themeColor,
+          flexDirection:'row'
         
       },
       image:{
           tintColor:colors.white,
-          width:25,
-          height:25,
-         position:'absolute',
-         top:5,
-         left:15
+          width:22,
+          height:22,
+          marginHorizontal:15,
+          marginTop:3
+         
         
       }
 })
